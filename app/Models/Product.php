@@ -21,4 +21,11 @@ class Product extends Model
         'color',
         'operating_system',
     ];
+
+    protected $casts = [
+        'price' => 'float',
+        'screen_size' => 'float',
+        'ram' => 'integer',
+        'storage' => 'integer',
+    ];
 }
