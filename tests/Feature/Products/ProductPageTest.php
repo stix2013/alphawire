@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\User;
 use App\Models\Product;
 
-uses(TestCase::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Create a user and authenticate
