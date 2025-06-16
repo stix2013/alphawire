@@ -15,7 +15,8 @@ it('can fill all product attributes', function () {
 
     // Ensure the factory provides all fillable attributes for creation
     foreach ($fillableAttributes as $attribute) {
-        expect($productData)->toHaveKey($attribute, "Factory's raw data is missing attribute: {$attribute} for creation.");
+        // expect($productData)->toHaveKey($attribute, "Factory's raw data is missing attribute: {$attribute} for creation.");
+        expect($productData)->toHaveKey($attribute, "{$productData[$attribute]}");
     }
 
     $product = Product::create($productData);
