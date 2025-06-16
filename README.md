@@ -37,6 +37,14 @@ The official Laravel starter kit for Livewire.
    npm run dev
    ```
 
+## Features
+
+### Product Management
+- This application includes a product management feature.
+- It utilizes a `Product` model to store product information.
+- Users can view a list of all products at the `/products` page.
+- Detailed information for each product can be accessed via pages like `/products/{id}` (e.g., `/products/1`).
+
 ## Running the Development Server
 
 To run the basic development server, use the following Artisan command:
@@ -60,3 +68,7 @@ composer test
 ```
 
 This command executes the test suite, which by default uses Pest and runs `php artisan test` under the hood.
+
+This includes tests for the Product Management feature, such as:
+- `tests/Feature/Products/ProductPageTest.php`
+- `tests/Unit/ProductTest.php`
