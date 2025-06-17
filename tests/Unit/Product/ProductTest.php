@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 it('can create a product', function () {
     $product = Product::factory()->create();

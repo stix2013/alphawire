@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\Role;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 test('can create role', function () {
     $role = Role::factory()->create();
