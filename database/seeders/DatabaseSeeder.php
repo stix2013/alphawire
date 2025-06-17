@@ -14,13 +14,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create a couple of roles if they don't exist
+        $adminRole = \App\Models\Role::firstOrCreate(['name' => 'Admin'], ['description' => 'Administrator role', 'enable' => true]);
+        $userRole = \App\Models\Role::firstOrCreate(['name' => 'User'], ['description' => 'Standard user role', 'enable' => true]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create an admin user
+        \App\Models\User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'role_id' => $adminRole->id,
         ]);
 
-        Product::factory(50)->create(); // Create 50 products
+        // Create some regular users
+        \App\Models\User::factory(10)->create([
+            'role_id' => $userRole->id,
+        ]);
+
+        // You can still call other seeders if needed, for example:
+        // $this->call([
+        //     ProductSeeder::class, // Assuming ProductSeeder exists
+        // ]);
     }
 }
