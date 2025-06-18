@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Models\Role;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
 
@@ -17,6 +18,7 @@ new class extends Component {
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->role_id = Auth::user()->role_id;
     }
 
     /**
@@ -37,6 +39,7 @@ new class extends Component {
                 'max:255',
                 Rule::unique(User::class)->ignore($user->id)
             ],
+            'role_id' => ['nullable', 'exists:roles,id'],
         ]);
 
         $user->fill($validated);
@@ -67,6 +70,13 @@ new class extends Component {
 
         Session::flash('status', 'verification-link-sent');
     }
+
+    public function with(): array
+    {
+        return [
+            'roles' => Role::where('enable', true)->pluck('name', 'id'),
+        ];
+    }
 }; ?>
 
 <section class="w-full">
@@ -96,6 +106,15 @@ new class extends Component {
                         @endif
                     </div>
                 @endif
+            </div>
+
+            <div>
+                <flux:select
+                    wire:model="role_id"
+                    :label="__('Role')"
+                    :options="$roles"
+                    placeholder="Select a role"
+                />
             </div>
 
             <div class="flex items-center gap-4">
