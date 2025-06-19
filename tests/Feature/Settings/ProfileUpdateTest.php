@@ -17,7 +17,8 @@ test('profile information can be updated', function () {
     $response = Volt::test('settings.profile')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
-        ->call('updateProfileInformation');
+        ->set('role_id', $user->role_id)
+        ->call('save');
 
     $response->assertHasNoErrors();
 
@@ -25,6 +26,7 @@ test('profile information can be updated', function () {
 
     expect($user->name)->toEqual('Test User');
     expect($user->email)->toEqual('test@example.com');
+    // expect($user->role_id)->toEqual(1);
     expect($user->email_verified_at)->toBeNull();
 });
 
@@ -36,7 +38,8 @@ test('email verification status is unchanged when email address is unchanged', f
     $response = Volt::test('settings.profile')
         ->set('name', 'Test User')
         ->set('email', $user->email)
-        ->call('updateProfileInformation');
+        ->set('role_id', $user->role_id)
+        ->call('save');
 
     $response->assertHasNoErrors();
 

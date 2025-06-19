@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -9,7 +8,10 @@ use Livewire\Volt\Component;
 
 new class extends Component {
     public string $name = '';
+
     public string $email = '';
+
+    public ?int $role_id = null;
 
     /**
      * Mount the component.
@@ -24,23 +26,30 @@ new class extends Component {
     /**
      * Update the profile information for the currently authenticated user.
      */
-    public function updateProfileInformation(): void
+    public function save(): void
     {
         $user = Auth::user();
 
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
+        // $validated = $this->validate([
+        //     'name' => ['required', 'string', 'max:255'],
 
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id)
-            ],
-            'role_id' => ['nullable', 'exists:roles,id'],
-        ]);
+        //     'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+        //     'role_id' => ['nullable', 'exists:roles,id'],
+        // ]);
+
+        $validated = Validator::make($this->all(), 
+        [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'role_id' => ['nullable', Rule::exists('roles', 'id')],
+        ],
+        [
+            'required' => 'The :attribute field is required'
+        ],
+
+        )->validate();
+
+        // $validated = $this->validate();
 
         $user->fill($validated);
 
@@ -83,18 +92,19 @@ new class extends Component {
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
+        <form wire:submit="save" class="my-6 w-full space-y-6">
             <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
 
             <div>
                 <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
 
-                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
+                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
                     <div>
                         <flux:text class="mt-4">
                             {{ __('Your email address is unverified.') }}
 
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                            <flux:link class="text-sm cursor-pointer"
+                                wire:click.prevent="resendVerificationNotification">
                                 {{ __('Click here to re-send the verification email.') }}
                             </flux:link>
                         </flux:text>
@@ -109,12 +119,14 @@ new class extends Component {
             </div>
 
             <div>
-                <flux:select
-                    wire:model="role_id"
-                    :label="__('Role')"
-                    :options="$roles"
-                    placeholder="Select a role"
-                />
+                <flux:select wire:model="role_id" :label="__('Role')" :op placeholder="Select a role">
+
+                    @foreach ($roles as $id => $role)
+                        <flux:select.option value="{{ $id }}" wire:key="{{ $id }}">
+                            {{ $role }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
             </div>
 
             <div class="flex items-center gap-4">
