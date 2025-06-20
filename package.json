@@ -7,6 +7,7 @@
         "dev": "vite"
     },
     "dependencies": {
+        "@tabler/icons": "^3.34.0",
         "@tailwindcss/vite": "^4.0.7",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
