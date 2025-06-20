@@ -30,26 +30,17 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        // $validated = $this->validate([
-        //     'name' => ['required', 'string', 'max:255'],
-
-        //     'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-        //     'role_id' => ['nullable', 'exists:roles,id'],
-        // ]);
-
-        $validated = Validator::make($this->all(), 
-        [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-            'role_id' => ['nullable', Rule::exists('roles', 'id')],
-        ],
-        [
-            'required' => 'The :attribute field is required'
-        ],
-
+        $validated = Validator::make(
+            $this->all(),
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+                'role_id' => ['nullable', Rule::exists('roles', 'id')],
+            ],
+            [
+                'required' => 'The :attribute field is required',
+            ],
         )->validate();
-
-        // $validated = $this->validate();
 
         $user->fill($validated);
 
