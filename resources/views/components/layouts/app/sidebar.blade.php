@@ -31,6 +31,7 @@
             </flux:navlist>
 
             <!-- Desktop User Menu -->
+            @auth
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
                 <flux:profile
                     :name="auth()->user()->name"
@@ -74,9 +75,19 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+            @endauth
+            @guest
+                <flux:navlist variant="outline">
+                    <flux:navlist.item icon="tabler.login" :href="route('login')" wire:navigate>{{ __('Login') }}</flux:navlist.item>
+                    @if (Route::has('register'))
+                        <flux:navlist.item icon="tabler.user-plus" :href="route('register')" wire:navigate>{{ __('Register') }}</flux:navlist.item>
+                    @endif
+                </flux:navlist>
+            @endguest
         </flux:sidebar>
 
         <!-- Mobile User Menu -->
+        @auth
         <flux:header class="lg:hidden">
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
@@ -125,6 +136,19 @@
                 </flux:menu>
             </flux:dropdown>
         </flux:header>
+        @endauth
+        @guest
+            <flux:header class="lg:hidden">
+                <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+                <flux:spacer />
+                <flux:navlist variant="outline" class="flex flex-row">
+                    <flux:navlist.item icon="tabler.login" :href="route('login')" wire:navigate>{{ __('Login') }}</flux:navlist.item>
+                    @if (Route::has('register'))
+                        <flux:navlist.item icon="tabler.user-plus" :href="route('register')" wire:navigate>{{ __('Register') }}</flux:navlist.item>
+                    @endif
+                </flux:navlist>
+            </flux:header>
+        @endguest
 
         {{ $slot }}
 
